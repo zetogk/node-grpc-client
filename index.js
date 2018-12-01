@@ -26,6 +26,12 @@ class GRPCClient {
             const methodName = listMethods[key].originalName;
             this.listNameMethods.push(methodName);
 
+            this[`${methodName}Async`] = (data, fnAnswer) => {
+
+                this.client[methodName](data, fnAnswer);
+
+            }
+
         }
 
     }
