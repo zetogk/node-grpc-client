@@ -32,6 +32,25 @@ class GRPCClient {
 
             }
 
+            this[`${methodName}Sync`] = (data) => {
+
+                const client = this.client;
+
+                return new Promise(function (resolve, reject) {
+                    client[methodName](data, (err, dat) => {
+
+                        if (err) {
+                            return reject(err);
+                        }
+
+                        resolve(dat);
+
+                    });
+
+                })
+
+            }
+
         }
 
     }
