@@ -8,5 +8,14 @@
   "dependencies": {
     "@grpc/proto-loader": "^0.3.0",
     "grpc": "^1.14.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zetogk/node-grpc-client.git"
+  },
+  "keywords": [
+    "grpc client",
+    "grpc node",
+    "grpc"
+  ]
 }
