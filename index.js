@@ -3,14 +3,14 @@ const protoLoader = require('@grpc/proto-loader');
 
 class GRPCClient {
 
-    constructor(protoPath, packageName, service, host) {
+    constructor(protoPath, packageName, service, host, options = {}) {
 
         this.packageDefinition = protoLoader.loadSync(protoPath, {
-            keepCase: true,
-            longs: String,
-            enums: String,
-            defaults: true,
-            oneofs: true
+            keepCase: options.keepCase || true,
+            longs: options.longs || String,
+            enums: options.enums || String,
+            defaults: options.default || true,
+            oneofs: options.default || true
         });
 
         const proto = grpc.loadPackageDefinition(this.packageDefinition)[packageName];

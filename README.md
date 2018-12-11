@@ -1,5 +1,5 @@
 # node-grpc-client
-Simple gRPC client on NodeJS v1.1.0
+Simple gRPC client on NodeJS v1.2.0
 
 ## Methods
 
