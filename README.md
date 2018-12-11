@@ -1,5 +1,5 @@
 # node-grpc-client
-Simple gRPC client on NodeJS v1.2.0
+Simple gRPC client on NodeJS v1.2.1
 
 ## Methods
 
@@ -129,3 +129,4 @@ const dataToSend = {
 
 ## Authors
 zetogk <zetogk@gmail.com>
+netsaj <fabiomoreno@outlook.com>
