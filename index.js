@@ -6,7 +6,7 @@ class GRPCClient {
     constructor(protoPath, packageName, service, host, options = {}) {
 
         this.packageDefinition = protoLoader.loadSync(protoPath, {
-            keepCase: options.keepCase || true,
+            keepCase: (options.keepCase === undefined) ? true : options.keepCase,
             longs: options.longs || String,
             enums: options.enums || String,
             defaults: options.default || true,
