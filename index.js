@@ -32,6 +32,13 @@ class GRPCClient {
 
             }
 
+
+            this[`${methodName}Stream`] = (data) => {
+
+                return this.client[methodName](data)
+                
+            }
+
             this[`${methodName}Sync`] = (data) => {
 
                 const client = this.client;
