@@ -12,6 +12,7 @@ The dynamic methods are the methods of the GRPC, then, its depends of your defin
 
 * Example dynamic async (using callbacks) method: `task1Async(data, callback);`.
 * Example dynamic sync (using promises) method: `await task2Sync(data);`.
+* Example dynamic stream method: `task3Stream(data).on('data', callback);`
 
 ---
 
@@ -124,6 +125,19 @@ const dataToSend = {
     console.log('The answer of request 2: ', response2);
 
 })();
+
+```
+
+## Streaming gRPC
+
+Some gRPC methods return a [stream](https://grpc.io/docs/tutorials/basic/node.html#streaming-rpcs). This allows subscription-based push communication between the server and the client, where the server can push data to the client.
+
+You can use the dynamic stream method for this. For example, if the server has a gRPC method Task3 that returns a stream:
+
+```bash
+
+const stream = myClient.task3Stream(dataToSend);
+stream.on('data', (data) => console.log(data));
 
 ```
 
