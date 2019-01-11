@@ -1,5 +1,5 @@
 # node-grpc-client
-Simple gRPC client on NodeJS v1.2.1
+Simple gRPC client on NodeJS v1.3.0
 
 ## Methods
 
@@ -142,5 +142,8 @@ stream.on('data', (data) => console.log(data));
 ```
 
 ## Authors
-zetogk <zetogk@gmail.com>
-netsaj <fabiomoreno@outlook.com>
+* zetogk <zetogk@gmail.com> - [GitHub profile](https://github.com/zetogk)
+
+### Contributors
+* netsaj <fabiomoreno@outlook.com> - [GitHub profile](https://github.com/netsaj)
+* jwulf [GitHub profile](https://github.com/jwulf)
