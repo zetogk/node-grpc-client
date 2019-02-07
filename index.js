@@ -61,7 +61,7 @@ class GRPCClient {
 
     }
 
-    runService(fnName, data, metadata = {}, fnAnswer) {
+    runService(fnName, data, fnAnswer, metadata = {}) {
 
         let metadata =  grpc.Metadata();
 
