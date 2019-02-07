@@ -3,8 +3,10 @@ Simple gRPC client on NodeJS v1.3.0
 
 ## Methods
 
-* `runService('TaskName', dataToSend, callback);`
+* `runService('TaskName', dataToSend, callback, metadata);`
 * `listMethods();`
+
+- metadata is an optional object
 
 ### Dynamic methods
 
@@ -147,3 +149,4 @@ stream.on('data', (data) => console.log(data));
 ### Contributors
 * netsaj <fabiomoreno@outlook.com> - [GitHub profile](https://github.com/netsaj)
 * jwulf [GitHub profile](https://github.com/jwulf)
+* stivenson <stivenson.rpm@gmail.com> - [GitHub profile](https://github.com/stivenson)
