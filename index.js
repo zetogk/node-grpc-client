@@ -1,9 +1,11 @@
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
+const { log } = console;
 
 class GRPCClient {
 
     constructor(protoPath, packageName, service, host, options = {}) {
+
         this.packageDefinition = protoLoader.loadSync(protoPath, {
             keepCase: (options.keepCase === undefined) ? true : options.keepCase,
             longs: (options.longs === undefined) ? String : options.longs,
@@ -62,15 +64,22 @@ class GRPCClient {
     }
 
     runService(fnName, data, fnAnswer, metadata = {}) {
+        try {
 
-        let metadata =  grpc.Metadata();
+            let meta = new grpc.Metadata();
 
-        for (let [key, value] of Object.entries(metadata)) {
-            metadata.add(key, value);
+            for (let [key, value] of Object.entries(metadata)) {
+                meta.add(key, value);
+            }
+
+            this.client[fnName](data, meta, fnAnswer);
+
+        } catch(e) {
+
+            log(e.message);
+            throw e;
+
         }
-
-        this.client[fnName](data, metadata, fnAnswer);
-
     }
 
     listMethods() {
