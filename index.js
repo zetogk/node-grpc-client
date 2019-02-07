@@ -10,8 +10,8 @@ class GRPCClient {
             keepCase: (options.keepCase === undefined) ? true : options.keepCase,
             longs: (options.longs === undefined) ? String : options.longs,
             enums: (options.enums === undefined) ? String : options.enums,
-            defaults: (options.default === undefined) ? true: options.default,
-            oneofs:  (options.default === undefined) ? true : options.default
+            defaults: (options.default === undefined) ? true : options.default,
+            oneofs: (options.default === undefined) ? true : options.default
         });
 
         const proto = grpc.loadPackageDefinition(this.packageDefinition)[packageName];
@@ -27,16 +27,44 @@ class GRPCClient {
             const methodName = listMethods[key].originalName;
             this.listNameMethods.push(methodName);
 
-            this[`${methodName}Async`] = (data, fnAnswer) => {
+            this[`${methodName}Async`] = (data, fnAnswer, options = {}) => {
 
-                this.client[methodName](data, fnAnswer);
+                if ('metadata' in options) {
+
+                    let meta = new grpc.Metadata();
+
+                    for (let [key, value] of Object.entries(options.metadata)) {
+                        meta.add(key, value);
+                    }
+
+                    this.client[methodName](data, meta, fnAnswer);
+
+                } else {
+
+                    this.client[methodName](data, fnAnswer);
+
+                }
 
             }
 
 
             this[`${methodName}Stream`] = (data) => {
 
-                return this.client[methodName](data)
+                if ('metadata' in options) {
+
+                    let meta = new grpc.Metadata();
+
+                    for (let [key, value] of Object.entries(options.metadata)) {
+                        meta.add(key, value);
+                    }
+
+                    return this.client[methodName](data, meta)
+
+                } else {
+
+                    return this.client[methodName](data);
+
+                }
 
             }
 
@@ -45,15 +73,38 @@ class GRPCClient {
                 const client = this.client;
 
                 return new Promise(function (resolve, reject) {
-                    client[methodName](data, (err, dat) => {
 
-                        if (err) {
-                            return reject(err);
+                    if ('metadata' in options) {
+
+                        let meta = new grpc.Metadata();
+
+                        for (let [key, value] of Object.entries(options.metadata)) {
+                            meta.add(key, value);
                         }
 
-                        resolve(dat);
+                        client[methodName](data, meta, (err, dat) => {
 
-                    });
+                            if (err) {
+                                return reject(err);
+                            }
+
+                            resolve(dat);
+
+                        });
+
+                    } else {
+
+                        client[methodName](data, (err, dat) => {
+
+                            if (err) {
+                                return reject(err);
+                            }
+
+                            resolve(dat);
+
+                        });
+
+                    }
 
                 })
 
@@ -74,7 +125,7 @@ class GRPCClient {
 
             this.client[fnName](data, meta, fnAnswer);
 
-        } catch(e) {
+        } catch (e) {
 
             log(e.message);
             throw e;
