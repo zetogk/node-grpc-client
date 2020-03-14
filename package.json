@@ -6,8 +6,8 @@
   "author": "Santiago Yepes Tamayo<zetogk@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@grpc/proto-loader": "^0.3.0",
-    "grpc": "^1.14.1"
+    "@grpc/proto-loader": "^0.5.3",
+    "grpc": "^1.24.2"
   },
   "repository": {
     "type": "git",
