@@ -9,11 +9,23 @@ class GRPCClient {
             keepCase: (options.keepCase === undefined) ? true : options.keepCase,
             longs: (options.longs === undefined) ? String : options.longs,
             enums: (options.enums === undefined) ? String : options.enums,
-            defaults: (options.default === undefined) ? true: options.default,
-            oneofs:  (options.default === undefined) ? true : options.default
+            defaults: (options.default === undefined) ? true : options.default,
+            oneofs: (options.default === undefined) ? true : options.default
         });
 
-        const proto = grpc.loadPackageDefinition(this.packageDefinition)[packageName];
+        const proto = ((packageName) => {
+
+            const packagePath = packageName.split('.');
+            let proto = grpc.loadPackageDefinition(this.packageDefinition);
+
+            for (let $i = 0; $i <= packagePath.length - 1; $i++) {
+
+                proto = proto[packagePath[$i]];
+
+            }
+            return proto;
+        })(packageName);
+
 
         const listMethods = this.packageDefinition[`${packageName}.${service}`];
 
@@ -36,7 +48,7 @@ class GRPCClient {
             this[`${methodName}Stream`] = (data) => {
 
                 return this.client[methodName](data)
-                
+
             }
 
             this[`${methodName}Sync`] = (data) => {
