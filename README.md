@@ -1,5 +1,8 @@
 # node-grpc-client
-Simple gRPC client on NodeJS v1.3.0
+Simple gRPC client on NodeJS v1.4.0
+
+### Important fix was solved in verison 1.4.0
+Now are supported packages which have *dots* or style of *inverse DNS* like: `com.github.nodegrpcclient`.
 
 ## Methods
 
