@@ -1,23 +1,29 @@
 # node-grpc-client
-Simple gRPC client on NodeJS v1.4.0
+Simple gRPC client on NodeJS v1.5.0
 
-### Important fix was solved in verison 1.4.0
+### * New feature in 1.5.0
+Send `metadata` is supported.
+
+### * Important fix was solved in verison 1.4.0.
 Now are supported packages which have *dots* or style of *inverse DNS* like: `com.github.nodegrpcclient`.
 
 ## Methods
 
-* `runService('TaskName', dataToSend, callback);`
+* `runService('TaskName', dataToSend, callback, options);`
 * `listMethods();`
 
 ### Dynamic methods
 
 The dynamic methods are the methods of the GRPC, then, its depends of your definition on your proto file.
 
-* Example dynamic async (using callbacks) method: `task1Async(data, callback);`.
-* Example dynamic sync (using promises) method: `await task2Sync(data);`.
-* Example dynamic stream method: `task3Stream(data).on('data', callback);`
+* Example dynamic async (using callbacks) method: `task1Async(data, callback, options);`.
+* Example dynamic sync (using promises) method: `await task2Sync(data, options);`.
+* Example dynamic stream method: `task3Stream(data, options).on('data', callback);`
+
+&nbsp;
 
 ---
+&nbsp;
 
 ## How to use it
 
@@ -74,11 +80,18 @@ const dataToSend = {
     text: 'Hello world'
 };
 
+// options is optional and is supported from version 1.5.0
+const options = {
+    metadata: {
+        hello: 'world'
+    }
+};
+
 myClient.runService('Task1', dataToSend, (err, res) => {
 
     console.log('Service response ', res);
 
-});
+}, options);
 
 ```
 
@@ -97,11 +110,18 @@ const dataToSend = {
     text: 'Hello world'
 };
 
+// options is optional and is supported from version 1.5.0
+const options = {
+    metadata: {
+        hello: 'world'
+    }
+};
+
 myClient.task1Async(dataToSend, (err, res) => {
 
     console.log('Service response ', res);
 
-});
+}, options);
 
 ```
 
@@ -120,9 +140,16 @@ const dataToSend = {
     text: 'Hello world'
 };
 
+// options is optional and is supported from version 1.5.0
+const options = {
+    metadata: {
+        hello: 'world'
+    }
+};
+
 (async function () {
 
-    const response1 = await myClient.task1Sync(dataToSend);
+    const response1 = await myClient.task1Sync(dataToSend, options);
     console.log('The answer of request 1: ', response1);
     const response2 = await myClient.task2Sync(dataToSend);
     console.log('The answer of request 2: ', response2);
@@ -130,6 +157,10 @@ const dataToSend = {
 })();
 
 ```
+&nbsp;
+
+---
+&nbsp;
 
 ## Streaming gRPC
 
@@ -139,10 +170,50 @@ You can use the dynamic stream method for this. For example, if the server has a
 
 ```bash
 
-const stream = myClient.task3Stream(dataToSend);
+// options is optional and is supported from version 1.5.0
+const options = {
+    metadata: {
+        hello: 'world'
+    }
+};
+
+const stream = myClient.task3Stream(dataToSend, options);
 stream.on('data', (data) => console.log(data));
 
 ```
+&nbsp;
+
+---
+&nbsp;
+## Options
+
+*Options* is a feature added in version 1.5.0.
+
+* Currently support the property **metadata**.
+* Is optional, you can or can not send it like parameters in the methods.
+* In case is not passed like a parameter, its default value is `{}`;
+
+### metadata
+
+**metadata** is a property added to *options* in version 1.5.0.
+
+* This property has to be an object *(key, value)*.
+* The values in most have to be a *string*. Just in case that the key ends with *-bin*, the values have to be a *Buffer*.
+Example: 
+```
+const options = {
+    metadata: {
+        myheader: 'testing metadata', //string
+        myheader2: '2', // string
+        'myheader-bin': myBuffer // buffer
+    }
+}
+```
+
+&nbsp;
+
+---
+&nbsp;
 
 ## Authors
 * zetogk <zetogk@gmail.com> - [GitHub profile](https://github.com/zetogk)
@@ -150,3 +221,4 @@ stream.on('data', (data) => console.log(data));
 ### Contributors
 * netsaj <fabiomoreno@outlook.com> - [GitHub profile](https://github.com/netsaj)
 * jwulf [GitHub profile](https://github.com/jwulf)
+* stivenson <stivenson.rpm@gmail.com> - [GitHub profile](https://github.com/stivenson)
