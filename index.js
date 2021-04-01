@@ -23,9 +23,10 @@ class GRPCClient {
                 proto = proto[packagePath[$i]];
 
             }
-            return proto;
-        })(packageName);
 
+            return proto;
+
+        })(packageName);
 
         const listMethods = this.packageDefinition[`${packageName}.${service}`];
 
@@ -38,25 +39,47 @@ class GRPCClient {
             const methodName = listMethods[key].originalName;
             this.listNameMethods.push(methodName);
 
-            this[`${methodName}Async`] = (data, fnAnswer) => {
+            this[`${methodName}Async`] = (data, fnAnswer, options = {}) => {
 
-                this.client[methodName](data, fnAnswer);
+                let metadataGrpc = {};
+
+                if (('metadata' in options) && (typeof options.metadata == 'object')) {
+
+                    metadataGrpc = this.generateMetadata(options.metadata)
+
+                }
+                this.client[methodName](data, metadataGrpc, fnAnswer);
 
             }
 
+            this[`${methodName}Stream`] = (data, options = {}) => {
 
-            this[`${methodName}Stream`] = (data) => {
+                let metadataGrpc = {};
 
-                return this.client[methodName](data)
+                if (('metadata' in options) && (typeof options.metadata == 'object')) {
+
+                    metadataGrpc = this.generateMetadata(options.metadata)
+
+                }
+
+                return this.client[methodName](data, metadataGrpc)
 
             }
 
-            this[`${methodName}Sync`] = (data) => {
+            this[`${methodName}Sync`] = (data, options = {}) => {
+
+                let metadataGrpc = {};
+
+                if (('metadata' in options) && (typeof options.metadata == 'object')) {
+
+                    metadataGrpc = this.generateMetadata(options.metadata)
+
+                }
 
                 const client = this.client;
 
                 return new Promise(function (resolve, reject) {
-                    client[methodName](data, (err, dat) => {
+                    client[methodName](data, metadataGrpc, (err, dat) => {
 
                         if (err) {
                             return reject(err);
@@ -74,9 +97,31 @@ class GRPCClient {
 
     }
 
-    runService(fnName, data, fnAnswer) {
+    generateMetadata = (metadata) => {
 
-        this.client[fnName](data, fnAnswer);
+        let metadataGrpc = new grpc.Metadata();
+
+        for (let [key, val] of Object.entries(metadata)) {
+
+            metadataGrpc.add(key, val);
+
+        }
+
+        return metadataGrpc
+
+    };
+
+    runService(fnName, data, fnAnswer, options = {}) {
+
+        let metadataGrpc = {};
+
+        if (('metadata' in options) && (typeof options.metadata == 'object')) {
+
+            metadataGrpc = this.generateMetadata(options.metadata)
+
+        }
+
+        this.client[fnName](data, metadataGrpc, fnAnswer);
 
     }
 
